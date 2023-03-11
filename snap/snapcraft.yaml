@@ -123,5 +123,6 @@ parts:
       - libspectre1
       - libgxps2
       - libgxps-utils
+      - libcaja-extension1
       
  
