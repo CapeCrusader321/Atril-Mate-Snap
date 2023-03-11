@@ -11,30 +11,53 @@ architectures:
   - build-on: amd64
     build-for: amd64
     
-#slots:
-  #atril-mate:
-    #interface: dbus
-    #bus: session
-    #name: org.transmission-gtk.community
+assumes: [snapd2.55]
+
+plugs:
+  foo-install-cups:
+    interface: content
+    content: foo
+    default-provider: cups
+    target: $SNAP_DATA/foo
+    
+slots:
+  atril-mate:
+    interface: dbus
+    bus: session
+    name: org.mate.atril-mate
     
 apps:
   atril-mate:
-    command: usr/local/bin/atril
+    command: usr/bin/atril
     extensions: [gnome]
     common-id: org.mate.atril
     environment:
             GTK_USE_PORTAL: 1
     plugs:
       - home
+      - cups
+      - avahi-observe
       - network
       - network-bind
       - raw-usb
       - removable-media
       - unity7
       - screen-inhibit-control
-    
-   
       
+  atril-previewer:
+    command: usr/bin/atril-previewer
+    plugs:
+      - avahi-observe
+      - cups
+      - gsettings
+      - home
+      - network
+      
+  atril-thumbnailer:
+    command: usr/bin/atril-thumbnailer
+    plugs:
+      - gsettings
+      - home      
 
 parts:
   atril-mate:
@@ -84,5 +107,21 @@ parts:
       ./autogen.sh --prefix=/usr
       make -j$SNAPCRAFT_PARALLEL_BUILD_COUNT PREFIX=/usr
       make PREFIX=/usr DESTDIR=${SNAPCRAFT_PART_INSTALL} install
+    
+    stage-packages:
+      - libsynctex2
+      - libdjvulibre21
+      - libgs9 
+      - libidn-dev
+      - libidn12
+      - libidn2-0
+      - libijs-0.35
+      - libjbig2dec0
+      - libkpathsea6
+      - libpaper-utils
+      - libpaper1
+      - libspectre1
+      - libgxps2
+      - libgxps-utils
       
  
